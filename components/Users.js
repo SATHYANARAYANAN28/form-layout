@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { getData } from "../services/http";
 import Card from "./Card";
 
@@ -11,6 +11,10 @@ function Users() {
     setUserDetails(userData);
   }
 
+  function pressHandler(id) {
+    console.log("Pressed user card");
+  }
+
   useEffect(() => {
     getExpenses();
   }, []);
@@ -18,15 +22,17 @@ function Users() {
   return (
     <>
       <View style={styles.container}>
-        {userDetails.map((data, key) => {
-          return (
-            <Card key={key}>
-              <Text style={styles.text}>Name: {data.name}</Text>
-              <Text style={styles.text}>Age: {data.age}</Text>
-              <Text style={styles.text}>DOB: {data.DOB}</Text>
+        <FlatList
+          data={userDetails}
+          renderItem={(itemData) => (
+            <Card>
+              <Text style={styles.text}>Name: {itemData.item.name}</Text>
+              <Text style={styles.text}>Age: {itemData.item.age}</Text>
+              <Text style={styles.text}>DOB: {itemData.item.DOB}</Text>
             </Card>
-          );
-        })}
+          )}
+          keyExtractor={(item) => item.id}
+        />
       </View>
     </>
   );
@@ -37,6 +43,9 @@ export default Users;
 const styles = StyleSheet.create({
   container: {
     marginVertical: 12,
+  },
+  pressContainer: {
+    overflow: "hidden",
   },
   text: {
     color: "white",
